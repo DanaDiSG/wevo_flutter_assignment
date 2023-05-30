@@ -37,7 +37,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    initVisibility();
     inputCards = buildList(visibilityIndexes);
     const appTitle = 'Wevo Search';
     return MaterialApp(
@@ -104,12 +103,16 @@ class _MyAppState extends State<MyApp> {
   }
 
   void initVisibility() {
+    List<bool> tempList = [];
     for (int i = 0; i < itemList.length; i++) {
-      visibilityIndexes.add(true);
+      tempList.add(true);
     }
+    setState(() {
+      visibilityIndexes = tempList;
+    });
   }
 
-  List<ItemCard> buildList(List<bool> visible) {
+  List<ItemCard> buildList(List<bool> visibilityList) {
     return itemList.map((e) =>  ItemCard(
       data : e,
       changeColor: () {
@@ -125,7 +128,7 @@ class _MyAppState extends State<MyApp> {
           });
         }
       },
-    visible: visible[itemList.indexOf(e)],
+    visible: visibilityList.isEmpty ? true : visibilityList[itemList.indexOf(e)],
   )).toList();
   }
 }

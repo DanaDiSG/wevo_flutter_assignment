@@ -1,33 +1,34 @@
 import 'package:flutter/material.dart';
-import 'data.dart';
+import 'item.dart';
 import 'item_card.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(const WevoSearchBar());
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class WevoSearchBar extends StatefulWidget {
+  const WevoSearchBar({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<WevoSearchBar> createState() => _WevoSearchBarState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _WevoSearchBarState extends State<WevoSearchBar> {
 
-  Color _color = Colors.white;
-  TextEditingController searchBarController = TextEditingController();
-  final List<Data> itemList = [
-    Data(title: 'Yes Man', description: 'Best movie ever', backgroundColor: Colors.blue),
-    Data(title: 'Joker', description: 'LOL', backgroundColor: Colors.purple),
-    Data(title: 'Guardians of the Galaxy', description: 'Haven\'t seen it yet', backgroundColor: Colors.pinkAccent),
-    Data(title: 'Harry Potter', description: 'Wizards amd Magic', backgroundColor: Colors.grey),
-    Data(title: 'Lord of the Rings', description: 'Classic', backgroundColor: Colors.pinkAccent),
-    Data(title: 'Lord of the Rings 2', description: 'Classic', backgroundColor: Colors.pinkAccent),
-    Data(title: 'Lord of the Rings 3', description: 'Classic', backgroundColor: Colors.pinkAccent),
-    Data(title: 'Lord of the Rings 4', description: 'Classic', backgroundColor: Colors.pinkAccent),
+  final List<Item> inputList = [
+    Item(title: 'Yes Man', description: 'Best movie ever', backgroundColor: Colors.blue),
+    Item(title: 'Joker', description: 'LOL', backgroundColor: Colors.purple),
+    Item(title: 'Guardians of the Galaxy', description: 'Haven\'t seen it yet', backgroundColor: Colors.pinkAccent),
+    Item(title: 'Harry Potter', description: 'Wizards and magic', backgroundColor: Colors.grey),
+    Item(title: 'Lord of the Rings', description: 'Classic', backgroundColor: Colors.pinkAccent),
+    Item(title: 'Lord of the Rings 2', description: 'Classic', backgroundColor: Colors.pinkAccent),
+    Item(title: 'Lord of the Rings 3', description: 'Classic', backgroundColor: Colors.pinkAccent),
+    Item(title: 'Lord of the Rings 4', description: 'Classic', backgroundColor: Colors.pinkAccent),
   ];
-  List<ItemCard> inputCards = List.empty();
+
+  Color pageBackgroundColor = Colors.white;
+  TextEditingController searchBarController = TextEditingController();
+  List<ItemCard> searchList = List.empty();
   List<bool> visibilityIndexes = [];
-  int lastColorWidgetPressed = -1;
+  int lastCardPressed = -1;
 
   @override
   void dispose() {
@@ -37,15 +38,15 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    inputCards = buildList(visibilityIndexes);
-    const appTitle = 'Wevo Search';
+    searchList = getSearchList(visibilityIndexes);
+    const appTitle = 'Wevo Energy Search';
     return MaterialApp(
       title: appTitle,
       home: Scaffold(
         appBar: AppBar(
           title: const Text(appTitle),
         ),
-        backgroundColor: _color,
+        backgroundColor: pageBackgroundColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -64,25 +65,7 @@ class _MyAppState extends State<MyApp> {
                   ),
                   const SizedBox(height: 10.0),
                   ElevatedButton(
-                    onPressed: () {
-                      initVisibility();
-                      if (searchBarController.text.isEmpty) {
-                        setState(() {
-                          inputCards = buildList(visibilityIndexes);
-                        });
-                        return;
-                      }
-                      for (int i = 0; i < itemList.length; i++) {
-                        if (itemList[i].title.compareTo(searchBarController.text) != 0) {
-                          setState(() {
-                            visibilityIndexes[i] = false;
-                          });
-                        }
-                      }
-                      setState(() {
-                        inputCards = buildList(visibilityIndexes);
-                      });
-                    },
+                    onPressed: showSearchResults,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
@@ -93,7 +76,7 @@ class _MyAppState extends State<MyApp> {
               ),
               const SizedBox(height: 50.0),
               Column(
-                children: inputCards,
+                children: searchList,
               )
             ],
           ),
@@ -104,7 +87,7 @@ class _MyAppState extends State<MyApp> {
 
   void initVisibility() {
     List<bool> tempList = [];
-    for (int i = 0; i < itemList.length; i++) {
+    for (int i = 0; i < inputList.length; i++) {
       tempList.add(true);
     }
     setState(() {
@@ -112,23 +95,40 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  List<ItemCard> buildList(List<bool> visibilityList) {
-    return itemList.map((e) =>  ItemCard(
+  List<ItemCard> getSearchList(List<bool> visibilityList) {
+    return inputList.map((e) =>  ItemCard(
       data : e,
       changeColor: () {
-        if (lastColorWidgetPressed == itemList.indexOf(e)
-            && _color.value == e.backgroundColor.value) {
+        if (lastCardPressed == inputList.indexOf(e)
+            && pageBackgroundColor.value == e.backgroundColor.value) {
           setState(() {
-            _color = Colors.white;
+            pageBackgroundColor = Colors.white;
           });
         } else {
           setState(() {
-            _color = e.backgroundColor;
-            lastColorWidgetPressed = itemList.indexOf(e);
+            pageBackgroundColor = e.backgroundColor;
+            lastCardPressed = inputList.indexOf(e);
           });
         }
       },
-    visible: visibilityList.isEmpty ? true : visibilityList[itemList.indexOf(e)],
+    visible: visibilityList.isEmpty ? true : visibilityList[inputList.indexOf(e)],
   )).toList();
+  }
+
+  void showSearchResults() {
+    initVisibility();
+    if (searchBarController.text.trim().isNotEmpty) {
+      for (int i = 0; i < inputList.length; i++) {
+        if (!inputList[i].title.toLowerCase()
+            .contains(searchBarController.text.trim().toLowerCase())) {
+          setState(() {
+            visibilityIndexes[i] = false;
+          });
+        }
+      }
+    }
+    setState(() {
+      searchList = getSearchList(visibilityIndexes);
+    });
   }
 }

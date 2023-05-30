@@ -16,14 +16,14 @@ class _MyAppState extends State<MyApp> {
   Color _color = Colors.white;
   TextEditingController searchBarController = TextEditingController();
   final List<Data> itemList = [
-    Data(title: 'Blue', description: 'This is blue', backgroundColor: Colors.blue),
-    Data(title: 'Purple', description: 'This is purple', backgroundColor: Colors.purple),
-    Data(title: 'Pink', description: 'This is pink', backgroundColor: Colors.pinkAccent),
-    Data(title: 'Pink', description: 'This is pink', backgroundColor: Colors.pinkAccent),
-    Data(title: 'Pink', description: 'This is pink', backgroundColor: Colors.pinkAccent),
-    Data(title: 'Pink', description: 'This is pink', backgroundColor: Colors.pinkAccent),
-    Data(title: 'Pink', description: 'This is pink', backgroundColor: Colors.pinkAccent),
-    Data(title: 'Pink', description: 'This is pink', backgroundColor: Colors.pinkAccent),
+    Data(title: 'Yes Man', description: 'Best movie ever', backgroundColor: Colors.blue),
+    Data(title: 'Joker', description: 'LOL', backgroundColor: Colors.purple),
+    Data(title: 'Guardians of the Galaxy', description: 'Haven\'t seen it yet', backgroundColor: Colors.pinkAccent),
+    Data(title: 'Harry Potter', description: 'Wizards amd Magic', backgroundColor: Colors.grey),
+    Data(title: 'Lord of the Rings', description: 'Classic', backgroundColor: Colors.pinkAccent),
+    Data(title: 'Lord of the Rings 2', description: 'Classic', backgroundColor: Colors.pinkAccent),
+    Data(title: 'Lord of the Rings 3', description: 'Classic', backgroundColor: Colors.pinkAccent),
+    Data(title: 'Lord of the Rings 4', description: 'Classic', backgroundColor: Colors.pinkAccent),
   ];
   List<ItemCard> inputCards = List.empty();
   List<bool> visibilityIndexes = [];
@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
                       controller: searchBarController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        hintText: 'the search bar',
+                        hintText: 'Type here to search',
                       ),
                     ),
                   ),

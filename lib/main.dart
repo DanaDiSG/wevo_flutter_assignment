@@ -1,33 +1,34 @@
 import 'package:flutter/material.dart';
-import 'data.dart';
+import 'item.dart';
 import 'item_card.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(const WevoSearchBar());
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class WevoSearchBar extends StatefulWidget {
+  const WevoSearchBar({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<WevoSearchBar> createState() => _WevoSearchBarState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _WevoSearchBarState extends State<WevoSearchBar> {
+
+  final List<Item> itemList = [
+    Item(title: 'Yes Man', description: 'Best movie ever', backgroundColor: Colors.blue),
+    Item(title: 'Joker', description: 'LOL', backgroundColor: Colors.purple),
+    Item(title: 'Guardians of the Galaxy', description: 'Haven\'t seen it yet', backgroundColor: Colors.pinkAccent),
+    Item(title: 'Harry Potter', description: 'Wizards and magic', backgroundColor: Colors.grey),
+    Item(title: 'Lord of the Rings', description: 'Classic', backgroundColor: Colors.pinkAccent),
+    Item(title: 'Lord of the Rings 2', description: 'Classic', backgroundColor: Colors.pinkAccent),
+    Item(title: 'Lord of the Rings 3', description: 'Classic', backgroundColor: Colors.pinkAccent),
+    Item(title: 'Lord of the Rings 4', description: 'Classic', backgroundColor: Colors.pinkAccent),
+  ];
 
   Color _color = Colors.white;
   TextEditingController searchBarController = TextEditingController();
-  final List<Data> itemList = [
-    Data(title: 'Yes Man', description: 'Best movie ever', backgroundColor: Colors.blue),
-    Data(title: 'Joker', description: 'LOL', backgroundColor: Colors.purple),
-    Data(title: 'Guardians of the Galaxy', description: 'Haven\'t seen it yet', backgroundColor: Colors.pinkAccent),
-    Data(title: 'Harry Potter', description: 'Wizards amd Magic', backgroundColor: Colors.grey),
-    Data(title: 'Lord of the Rings', description: 'Classic', backgroundColor: Colors.pinkAccent),
-    Data(title: 'Lord of the Rings 2', description: 'Classic', backgroundColor: Colors.pinkAccent),
-    Data(title: 'Lord of the Rings 3', description: 'Classic', backgroundColor: Colors.pinkAccent),
-    Data(title: 'Lord of the Rings 4', description: 'Classic', backgroundColor: Colors.pinkAccent),
-  ];
   List<ItemCard> inputCards = List.empty();
   List<bool> visibilityIndexes = [];
-  int lastColorWidgetPressed = -1;
+  int lastCardPressed = -1;
 
   @override
   void dispose() {
@@ -38,7 +39,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     inputCards = buildList(visibilityIndexes);
-    const appTitle = 'Wevo Search';
+    const appTitle = 'Wevo Energy Search';
     return MaterialApp(
       title: appTitle,
       home: Scaffold(
@@ -73,7 +74,7 @@ class _MyAppState extends State<MyApp> {
                         return;
                       }
                       for (int i = 0; i < itemList.length; i++) {
-                        if (itemList[i].title.compareTo(searchBarController.text) != 0) {
+                        if (!itemList[i].title.contains(searchBarController.text)) {
                           setState(() {
                             visibilityIndexes[i] = false;
                           });
@@ -116,7 +117,7 @@ class _MyAppState extends State<MyApp> {
     return itemList.map((e) =>  ItemCard(
       data : e,
       changeColor: () {
-        if (lastColorWidgetPressed == itemList.indexOf(e)
+        if (lastCardPressed == itemList.indexOf(e)
             && _color.value == e.backgroundColor.value) {
           setState(() {
             _color = Colors.white;
@@ -124,7 +125,7 @@ class _MyAppState extends State<MyApp> {
         } else {
           setState(() {
             _color = e.backgroundColor;
-            lastColorWidgetPressed = itemList.indexOf(e);
+            lastCardPressed = itemList.indexOf(e);
           });
         }
       },

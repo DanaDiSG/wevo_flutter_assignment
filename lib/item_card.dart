@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'data.dart';
+import 'item.dart';
 
 class ItemCard extends StatelessWidget {
 
-  late final Data data;
+  late final Item data;
   late final Function changeColor;
   late bool visible;
 
@@ -18,7 +18,7 @@ class ItemCard extends StatelessWidget {
         child: Visibility(
             visible: true,
             child: Card(
-            margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
+            margin: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
             child: Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
@@ -31,10 +31,10 @@ class ItemCard extends StatelessWidget {
                       color: data.backgroundColor,
                     ),
                   ),
-                  SizedBox(height: 6.0),
+                  const SizedBox(height: 6.0),
                   Text(
                     data.description,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14.0,
                       color: Colors.black,
                     ),

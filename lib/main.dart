@@ -74,7 +74,8 @@ class _WevoSearchBarState extends State<WevoSearchBar> {
                         return;
                       }
                       for (int i = 0; i < itemList.length; i++) {
-                        if (!itemList[i].title.contains(searchBarController.text)) {
+                        if (!itemList[i].title.toLowerCase()
+                            .contains(searchBarController.text.toLowerCase())) {
                           setState(() {
                             visibilityIndexes[i] = false;
                           });

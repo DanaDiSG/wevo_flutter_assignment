@@ -3,11 +3,11 @@ import 'item.dart';
 
 class ItemCard extends StatelessWidget {
 
-  late final Item data;
-  late final Function changeColor;
-  late bool visible;
+  final Item data;
+  final Function changeColor;
+  final bool visible;
 
-  ItemCard({ required this.data, required this.changeColor, required this.visible });
+  const ItemCard({super.key,  required this.data, required this.changeColor, required this.visible });
 
   @override
   Widget build(BuildContext context) {

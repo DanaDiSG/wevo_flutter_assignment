@@ -4,6 +4,6 @@ A new Flutter project.
 
 ## Getting Started
 
-This project is a Flutter application to dazzle Wevo Energy managers so they will offer me a job at their cool startup.
+This project is a Flutter application for Wevo Energy so they will offer me a job at their cool startup :)
 
 Good Luck!

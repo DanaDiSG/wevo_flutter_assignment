@@ -13,7 +13,7 @@ class WevoSearchBar extends StatefulWidget {
 
 class _WevoSearchBarState extends State<WevoSearchBar> {
 
-  final List<Item> itemList = [
+  final List<Item> inputList = [
     Item(title: 'Yes Man', description: 'Best movie ever', backgroundColor: Colors.blue),
     Item(title: 'Joker', description: 'LOL', backgroundColor: Colors.purple),
     Item(title: 'Guardians of the Galaxy', description: 'Haven\'t seen it yet', backgroundColor: Colors.pinkAccent),
@@ -24,9 +24,9 @@ class _WevoSearchBarState extends State<WevoSearchBar> {
     Item(title: 'Lord of the Rings 4', description: 'Classic', backgroundColor: Colors.pinkAccent),
   ];
 
-  Color _color = Colors.white;
+  Color pageBackgroundColor = Colors.white;
   TextEditingController searchBarController = TextEditingController();
-  List<ItemCard> inputCards = List.empty();
+  List<ItemCard> searchList = List.empty();
   List<bool> visibilityIndexes = [];
   int lastCardPressed = -1;
 
@@ -38,7 +38,7 @@ class _WevoSearchBarState extends State<WevoSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    inputCards = buildList(visibilityIndexes);
+    searchList = getSearchList(visibilityIndexes);
     const appTitle = 'Wevo Energy Search';
     return MaterialApp(
       title: appTitle,
@@ -46,7 +46,7 @@ class _WevoSearchBarState extends State<WevoSearchBar> {
         appBar: AppBar(
           title: const Text(appTitle),
         ),
-        backgroundColor: _color,
+        backgroundColor: pageBackgroundColor,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -65,26 +65,7 @@ class _WevoSearchBarState extends State<WevoSearchBar> {
                   ),
                   const SizedBox(height: 10.0),
                   ElevatedButton(
-                    onPressed: () {
-                      initVisibility();
-                      if (searchBarController.text.isEmpty) {
-                        setState(() {
-                          inputCards = buildList(visibilityIndexes);
-                        });
-                        return;
-                      }
-                      for (int i = 0; i < itemList.length; i++) {
-                        if (!itemList[i].title.toLowerCase()
-                            .contains(searchBarController.text.toLowerCase())) {
-                          setState(() {
-                            visibilityIndexes[i] = false;
-                          });
-                        }
-                      }
-                      setState(() {
-                        inputCards = buildList(visibilityIndexes);
-                      });
-                    },
+                    onPressed: showSearchResults,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
@@ -95,7 +76,7 @@ class _WevoSearchBarState extends State<WevoSearchBar> {
               ),
               const SizedBox(height: 50.0),
               Column(
-                children: inputCards,
+                children: searchList,
               )
             ],
           ),
@@ -106,7 +87,7 @@ class _WevoSearchBarState extends State<WevoSearchBar> {
 
   void initVisibility() {
     List<bool> tempList = [];
-    for (int i = 0; i < itemList.length; i++) {
+    for (int i = 0; i < inputList.length; i++) {
       tempList.add(true);
     }
     setState(() {
@@ -114,23 +95,40 @@ class _WevoSearchBarState extends State<WevoSearchBar> {
     });
   }
 
-  List<ItemCard> buildList(List<bool> visibilityList) {
-    return itemList.map((e) =>  ItemCard(
+  List<ItemCard> getSearchList(List<bool> visibilityList) {
+    return inputList.map((e) =>  ItemCard(
       data : e,
       changeColor: () {
-        if (lastCardPressed == itemList.indexOf(e)
-            && _color.value == e.backgroundColor.value) {
+        if (lastCardPressed == inputList.indexOf(e)
+            && pageBackgroundColor.value == e.backgroundColor.value) {
           setState(() {
-            _color = Colors.white;
+            pageBackgroundColor = Colors.white;
           });
         } else {
           setState(() {
-            _color = e.backgroundColor;
-            lastCardPressed = itemList.indexOf(e);
+            pageBackgroundColor = e.backgroundColor;
+            lastCardPressed = inputList.indexOf(e);
           });
         }
       },
-    visible: visibilityList.isEmpty ? true : visibilityList[itemList.indexOf(e)],
+    visible: visibilityList.isEmpty ? true : visibilityList[inputList.indexOf(e)],
   )).toList();
+  }
+
+  void showSearchResults() {
+    initVisibility();
+    if (searchBarController.text.trim().isNotEmpty) {
+      for (int i = 0; i < inputList.length; i++) {
+        if (!inputList[i].title.toLowerCase()
+            .contains(searchBarController.text.trim().toLowerCase())) {
+          setState(() {
+            visibilityIndexes[i] = false;
+          });
+        }
+      }
+    }
+    setState(() {
+      searchList = getSearchList(visibilityIndexes);
+    });
   }
 }
